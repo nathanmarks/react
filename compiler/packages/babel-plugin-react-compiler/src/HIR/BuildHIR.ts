@@ -3767,6 +3767,7 @@ function lowerAssignment(
           pattern: {
             kind: 'ArrayPattern',
             items,
+            loc: lvalue.node.loc ?? GeneratedSource,
           },
         },
         value,
@@ -3944,6 +3945,7 @@ function lowerAssignment(
           pattern: {
             kind: 'ObjectPattern',
             properties,
+            loc: lvalue.node.loc ?? GeneratedSource,
           },
         },
         value,

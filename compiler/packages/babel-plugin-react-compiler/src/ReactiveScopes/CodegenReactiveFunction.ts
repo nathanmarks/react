@@ -1236,7 +1236,7 @@ function codegenInstructionNullable(
           suggestions: null,
         });
         return createVariableDeclaration(instr.loc, 'const', [
-          t.variableDeclarator(codegenLValue(cx, lvalue), value),
+          createVariableDeclarator(codegenLValue(cx, lvalue), value),
         ]);
       }
       case InstructionKind.Function: {
@@ -1276,7 +1276,7 @@ function codegenInstructionNullable(
           suggestions: null,
         });
         return createVariableDeclaration(instr.loc, 'let', [
-          t.variableDeclarator(codegenLValue(cx, lvalue), value),
+          createVariableDeclarator(codegenLValue(cx, lvalue), value),
         ]);
       }
       case InstructionKind.Reassign: {
@@ -1481,6 +1481,9 @@ function withLoc<T extends (...args: Array<any>) => t.Node>(
   };
 }
 
+const createIdentifier = withLoc(t.identifier);
+const createArrayPattern = withLoc(t.arrayPattern);
+const createObjectPattern = withLoc(t.objectPattern);
 const createBinaryExpression = withLoc(t.binaryExpression);
 const createExpressionStatement = withLoc(t.expressionStatement);
 const _createLabelledStatement = withLoc(t.labeledStatement);
@@ -1502,6 +1505,22 @@ const createJsxText = withLoc(t.jsxText);
 const createJsxClosingElement = withLoc(t.jsxClosingElement);
 const createJsxOpeningElement = withLoc(t.jsxOpeningElement);
 const createStringLiteral = withLoc(t.stringLiteral);
+
+function createVariableDeclarator(
+  id: t.LVal,
+  init?: t.Expression | null,
+): t.VariableDeclarator {
+  const node = t.variableDeclarator(id, init);
+
+  if (id.loc && init?.loc) {
+    node.loc = {
+      start: id.loc.start,
+      end: init.loc.end,
+    };
+  }
+
+  return node;
+}
 
 function createHookGuard(
   guard: ExternalFunction,
@@ -2431,7 +2450,7 @@ function codegenArrayPattern(
 ): t.ArrayPattern {
   const hasHoles = !pattern.items.every(e => e.kind !== 'Hole');
   if (hasHoles) {
-    const result = t.arrayPattern([]);
+    const result = createArrayPattern(pattern.loc, []);
     /*
      * Older versions of babel have a validation bug fixed by
      * https://github.com/babel/babel/pull/10917
@@ -2452,7 +2471,7 @@ function codegenArrayPattern(
     }
     return result;
   } else {
-    return t.arrayPattern(
+    return createArrayPattern(pattern.loc, 
       pattern.items.map(item => {
         if (item.kind === 'Hole') {
           return null;
@@ -2472,7 +2491,8 @@ function codegenLValue(
       return codegenArrayPattern(cx, pattern);
     }
     case 'ObjectPattern': {
-      return t.objectPattern(
+      return createObjectPattern(
+        pattern.loc,
         pattern.properties.map(property => {
           if (property.kind === 'ObjectProperty') {
             const key = codegenObjectPropertyKey(cx, property.key);
@@ -2495,7 +2515,7 @@ function codegenLValue(
       return t.restElement(codegenLValue(cx, pattern.place));
     }
     case 'Identifier': {
-      return convertIdentifier(pattern.identifier);
+      return convertIdentifier(pattern.identifier, pattern.loc);
     }
     default: {
       assertExhaustive(
@@ -2560,7 +2580,7 @@ function codegenPlace(cx: Context, place: Place): t.Expression | t.JSXText {
   return identifier;
 }
 
-function convertIdentifier(identifier: Identifier): t.Identifier {
+function convertIdentifier(identifier: Identifier, loc?: SourceLocation): t.Identifier {
   CompilerError.invariant(
     identifier.name !== null && identifier.name.kind === 'named',
     {
@@ -2570,7 +2590,7 @@ function convertIdentifier(identifier: Identifier): t.Identifier {
       suggestions: null,
     },
   );
-  return t.identifier(identifier.name.value);
+  return createIdentifier(loc, identifier.name.value);
 }
 
 function compareScopeDependency(
