@@ -88,6 +88,7 @@ import {
   validateNoRefAccessInRender,
   validateNoSetStateInRender,
   validatePreservedManualMemoization,
+  validateSourceLocations,
   validateUseMemo,
 } from '../Validation';
 import {validateLocalsNotReassignedAfterRender} from '../Validation/ValidateLocalsNotReassignedAfterRender';
@@ -572,6 +573,10 @@ function runWithEnvironment(
   log({kind: 'ast', name: 'Codegen', value: ast});
   for (const outlined of ast.outlined) {
     log({kind: 'ast', name: 'Codegen (outlined)', value: outlined.fn});
+  }
+
+  if (env.config.validateSourceLocations) {
+    validateSourceLocations(ast).unwrap();
   }
 
   /**
