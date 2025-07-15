@@ -369,6 +369,13 @@ export const EnvironmentConfigSchema = z.object({
    */
   validateNoFreezingKnownMutableFunctions: z.boolean().default(false),
 
+  /**
+   * Validates that all AST nodes generated during codegen have proper source locations.
+   * This is useful for debugging issues with source maps and Istanbul coverage.
+   * When enabled, the compiler will error if any AST node is missing a location.
+   */
+  validateSourceLocations: z.boolean().default(false),
+
   /*
    * When enabled, the compiler assumes that hooks follow the Rules of React:
    * - Hooks may memoize computation based on any of their parameters, thus
