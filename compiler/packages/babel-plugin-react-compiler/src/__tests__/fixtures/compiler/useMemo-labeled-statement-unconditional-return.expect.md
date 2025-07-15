@@ -24,6 +24,7 @@ export const FIXTURE_ENTRYPOINT = {
 ```javascript
 function Component(props) {
   const x = props.value;
+
   return x;
 }
 

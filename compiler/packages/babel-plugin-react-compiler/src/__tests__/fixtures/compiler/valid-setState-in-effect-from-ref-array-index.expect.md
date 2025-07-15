@@ -55,6 +55,7 @@ function Component() {
     t2 = $[2];
   }
   useEffect(t1, t2);
+
   return value;
 }
 

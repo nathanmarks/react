@@ -57,6 +57,7 @@ function Component(props) {
   } catch {
     return null;
   }
+
   return el;
 }
 

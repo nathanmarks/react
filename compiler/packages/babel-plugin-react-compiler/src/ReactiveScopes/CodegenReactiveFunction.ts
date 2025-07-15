@@ -1120,7 +1120,7 @@ function codegenTerminal(
          * This needs to be updated when we handle non-trivial ForOf inits
          */
         createVariableDeclaration(iterableItem.value.loc, varDeclKind, [
-          t.variableDeclarator(lval, null),
+          createVariableDeclarator(lval, null),
         ]),
         codegenInstructionValueToExpression(cx, iterableCollection.value),
         codegenBlock(cx, terminal.loop),
@@ -1238,7 +1238,7 @@ function codegenTerminal(
          * This needs to be updated when we handle non-trivial ForOf inits
          */
         createVariableDeclaration(iterableItem.value.loc, varDeclKind, [
-          t.variableDeclarator(lval, null),
+          createVariableDeclarator(lval, null),
         ]),
         codegenInstructionValueToExpression(cx, iterableCollection),
         codegenBlock(cx, terminal.loop),
@@ -1260,9 +1260,9 @@ function codegenTerminal(
       const value = codegenPlaceToExpression(cx, terminal.value);
       if (value.type === 'Identifier' && value.name === 'undefined') {
         // Use implicit undefined
-        return t.returnStatement();
+        return createReturnStatement(terminal.loc);
       }
-      return t.returnStatement(value);
+      return createReturnStatement(terminal.loc, value);
     }
     case 'switch': {
       return createSwitchStatement(
@@ -1406,7 +1406,7 @@ function codegenInstructionNullable(
           suggestions: null,
         });
         return createVariableDeclaration(instr.loc, 'const', [
-          t.variableDeclarator(codegenLValue(cx, lvalue), value),
+          createVariableDeclarator(codegenLValue(cx, lvalue), value),
         ]);
       }
       case InstructionKind.Function: {
@@ -1470,7 +1470,7 @@ function codegenInstructionNullable(
           suggestions: null,
         });
         return createVariableDeclaration(instr.loc, 'let', [
-          t.variableDeclarator(codegenLValue(cx, lvalue), value),
+          createVariableDeclarator(codegenLValue(cx, lvalue), value),
         ]);
       }
       case InstructionKind.Reassign: {
@@ -1710,11 +1710,15 @@ function withLoc<T extends (...args: Array<any>) => t.Node>(
   };
 }
 
+const createIdentifier = withLoc(t.identifier);
+const createArrayPattern = withLoc(t.arrayPattern);
+const createObjectPattern = withLoc(t.objectPattern);
 const createBinaryExpression = withLoc(t.binaryExpression);
 const createExpressionStatement = withLoc(t.expressionStatement);
 const _createLabelledStatement = withLoc(t.labeledStatement);
 const createVariableDeclaration = withLoc(t.variableDeclaration);
 const createFunctionDeclaration = withLoc(t.functionDeclaration);
+const createReturnStatement = withLoc(t.returnStatement);
 const createWhileStatement = withLoc(t.whileStatement);
 const createDoWhileStatement = withLoc(t.doWhileStatement);
 const createSwitchStatement = withLoc(t.switchStatement);
@@ -1740,6 +1744,24 @@ const createThrowStatement = withLoc(t.throwStatement);
 const createTryStatement = withLoc(t.tryStatement);
 const createBreakStatement = withLoc(t.breakStatement);
 const createContinueStatement = withLoc(t.continueStatement);
+
+function createVariableDeclarator(
+  id: t.LVal,
+  init?: t.Expression | null,
+): t.VariableDeclarator {
+  const node = t.variableDeclarator(id, init);
+
+  if (id.loc && init?.loc) {
+    node.loc = {
+      start: id.loc.start,
+      end: init.loc.end,
+      filename: id.loc.filename,
+      identifierName: undefined,
+    };
+  }
+
+  return node;
+}
 
 function createHookGuard(
   guard: ExternalFunction,
@@ -1848,7 +1870,7 @@ function codegenInstruction(
       );
     } else {
       return createVariableDeclaration(instr.loc, 'const', [
-        t.variableDeclarator(
+        createVariableDeclarator(
           convertIdentifier(instr.lvalue.identifier),
           expressionValue,
         ),
@@ -2775,7 +2797,7 @@ function codegenArrayPattern(
 ): t.ArrayPattern {
   const hasHoles = !pattern.items.every(e => e.kind !== 'Hole');
   if (hasHoles) {
-    const result = t.arrayPattern([]);
+    const result = createArrayPattern(pattern.loc, []);
     /*
      * Older versions of babel have a validation bug fixed by
      * https://github.com/babel/babel/pull/10917
@@ -2796,7 +2818,7 @@ function codegenArrayPattern(
     }
     return result;
   } else {
-    return t.arrayPattern(
+    return createArrayPattern(pattern.loc, 
       pattern.items.map(item => {
         if (item.kind === 'Hole') {
           return null;
@@ -2816,7 +2838,8 @@ function codegenLValue(
       return codegenArrayPattern(cx, pattern);
     }
     case 'ObjectPattern': {
-      return t.objectPattern(
+      return createObjectPattern(
+        pattern.loc,
         pattern.properties.map(property => {
           if (property.kind === 'ObjectProperty') {
             const key = codegenObjectPropertyKey(cx, property.key);
@@ -2935,7 +2958,7 @@ function convertIdentifier(identifier: Identifier): t.Identifier {
       suggestions: null,
     },
   );
-  return t.identifier(identifier.name.value);
+  return createIdentifier(identifier.loc, identifier.name.value);
 }
 
 function compareScopeDependency(

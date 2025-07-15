@@ -53,6 +53,7 @@ function Component(props) {
     t0 = y;
   }
   const x = t0;
+
   return x;
 }
 

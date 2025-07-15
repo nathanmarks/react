@@ -49,6 +49,7 @@ function Tooltip() {
     t1 = $[1];
   }
   useLayoutEffect(t0, t1);
+
   return tooltipHeight;
 }
 

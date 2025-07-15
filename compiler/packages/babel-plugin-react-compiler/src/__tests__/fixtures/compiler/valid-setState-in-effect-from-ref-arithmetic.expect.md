@@ -54,6 +54,7 @@ function Component() {
     t2 = $[2];
   }
   useLayoutEffect(t1, t2);
+
   return computedSize;
 }
 

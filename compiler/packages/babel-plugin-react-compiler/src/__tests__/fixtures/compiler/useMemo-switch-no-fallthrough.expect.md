@@ -39,6 +39,7 @@ function Component(props) {
     }
   }
   const x = t0;
+
   return x;
 }
 

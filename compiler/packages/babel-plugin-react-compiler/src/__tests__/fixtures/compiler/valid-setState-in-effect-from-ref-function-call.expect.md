@@ -50,7 +50,6 @@ function Component() {
         }
         return 100;
       };
-
       setWidth(getBoundingRect(ref));
     };
     t1 = [];
@@ -61,6 +60,7 @@ function Component() {
     t1 = $[1];
   }
   useEffect(t0, t1);
+
   return width;
 }
 
