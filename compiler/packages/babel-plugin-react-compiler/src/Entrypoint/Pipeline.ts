@@ -575,6 +575,8 @@ function runWithEnvironment(
     log({kind: 'ast', name: 'Codegen (outlined)', value: outlined.fn});
   }
 
+  console.debug(ast);
+
   if (env.config.validateSourceLocations) {
     validateSourceLocations(ast).unwrap();
   }
