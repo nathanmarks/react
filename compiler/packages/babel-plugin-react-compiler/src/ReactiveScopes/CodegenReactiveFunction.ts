@@ -113,6 +113,16 @@ export type CodegenFunction = {
   hasFireRewrite: boolean;
 };
 
+function customExpressionStatement(args: any) {
+  const result = t.expressionStatement(args)
+  // if (args.callee?.name === 'useEffect') {
+  //   const error = new Error('test')
+  //   console.debug(error.stack)
+  //   console.debug('expressionStatement', args, result)
+  // }
+  return result
+}
+
 export function codegenFunction(
   fn: ReactiveFunction,
   {
@@ -218,7 +228,7 @@ export function codegenFunction(
                 t.numericLiteral(1),
               ),
               t.blockStatement([
-                t.expressionStatement(
+                customExpressionStatement(
                   t.assignmentExpression(
                     '=',
                     t.memberExpression(
@@ -237,7 +247,7 @@ export function codegenFunction(
                 ),
               ]),
             ),
-            t.expressionStatement(
+            customExpressionStatement(
               t.assignmentExpression(
                 '=',
                 t.memberExpression(
@@ -315,7 +325,7 @@ export function codegenFunction(
     ).name;
     const test: t.IfStatement = t.ifStatement(
       ifTest,
-      t.expressionStatement(
+      customExpressionStatement(
         t.callExpression(t.identifier(instrumentFnIdentifier), [
           t.stringLiteral(fn.id),
           t.stringLiteral(fn.env.filename ?? ''),
@@ -657,7 +667,7 @@ function codegenReactiveScope(
      * is no corresponding cacheLoadStatement for dependencies
      */
     cacheStoreStatements.push(
-      t.expressionStatement(
+      customExpressionStatement(
         t.assignmentExpression(
           '=',
           t.memberExpression(
@@ -795,7 +805,7 @@ function codegenReactiveScope(
         true,
       );
       cacheStoreStatements.push(
-        t.expressionStatement(t.assignmentExpression('=', slot, value)),
+        customExpressionStatement(t.assignmentExpression('=', slot, value)),
       );
       cacheLoadOldValueStatements.push(
         t.variableDeclaration('let', [
@@ -803,7 +813,7 @@ function codegenReactiveScope(
         ]),
       );
       changeDetectionStatements.push(
-        t.expressionStatement(
+        customExpressionStatement(
           t.callExpression(t.identifier(importedDetectionFunctionIdentifier), [
             t.identifier(loadName),
             t.cloneNode(name, true),
@@ -815,7 +825,7 @@ function codegenReactiveScope(
         ),
       );
       idempotenceDetectionStatements.push(
-        t.expressionStatement(
+        customExpressionStatement(
           t.callExpression(t.identifier(importedDetectionFunctionIdentifier), [
             t.cloneNode(slot, true),
             t.cloneNode(name, true),
@@ -827,7 +837,7 @@ function codegenReactiveScope(
         ),
       );
       idempotenceDetectionStatements.push(
-        t.expressionStatement(t.assignmentExpression('=', name, slot)),
+        customExpressionStatement(t.assignmentExpression('=', name, slot)),
       );
     }
     const condition = cx.synthesizeName('condition');
@@ -856,7 +866,7 @@ function codegenReactiveScope(
   } else {
     for (const {name, index, value} of cacheLoads) {
       cacheStoreStatements.push(
-        t.expressionStatement(
+        customExpressionStatement(
           t.assignmentExpression(
             '=',
             t.memberExpression(
@@ -869,7 +879,7 @@ function codegenReactiveScope(
         ),
       );
       cacheLoadStatements.push(
-        t.expressionStatement(
+        customExpressionStatement(
           t.assignmentExpression(
             '=',
             name,
@@ -1553,6 +1563,9 @@ function codegenInstructionNullable(
     cx.objectMethods.set(instr.lvalue.identifier.id, instr.value);
     return null;
   } else {
+    // if (instr.id === 34) {
+    //   console.debug('codegenInstruction', instr.loc, instr.value.loc)
+    // }
     const value = codegenInstructionValue(cx, instr.value);
     const statement = codegenInstruction(cx, instr, value);
     if (statement.type === 'EmptyStatement') {
@@ -1714,7 +1727,7 @@ const createIdentifier = withLoc(t.identifier);
 const createArrayPattern = withLoc(t.arrayPattern);
 const createObjectPattern = withLoc(t.objectPattern);
 const createBinaryExpression = withLoc(t.binaryExpression);
-const createExpressionStatement = withLoc(t.expressionStatement);
+const createExpressionStatement = withLoc(customExpressionStatement);
 const _createLabelledStatement = withLoc(t.labeledStatement);
 const createVariableDeclaration = withLoc(t.variableDeclaration);
 const createFunctionDeclaration = withLoc(t.functionDeclaration);
@@ -1772,7 +1785,7 @@ function createHookGuard(
 ): t.TryStatement {
   const guardFnName = context.addImportSpecifier(guard).name;
   function createHookGuardImpl(kind: number): t.ExpressionStatement {
-    return t.expressionStatement(
+    return customExpressionStatement(
       t.callExpression(t.identifier(guardFnName), [t.numericLiteral(kind)]),
     );
   }
@@ -1851,7 +1864,7 @@ function codegenInstruction(
     return value;
   }
   if (instr.lvalue === null) {
-    return t.expressionStatement(convertValueToExpression(value));
+    return customExpressionStatement(convertValueToExpression(value));
   }
   if (instr.lvalue.identifier.name === null) {
     // temporary

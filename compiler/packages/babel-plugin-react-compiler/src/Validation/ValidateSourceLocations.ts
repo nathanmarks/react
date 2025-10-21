@@ -18,22 +18,13 @@ import {Result} from '../Utils/Result';
 const IMPORTANT_INSTRUMENTED_TYPES = new Set([
   'ArrowFunctionExpression',
   'AssignmentPattern',
-  // 'BlockStatement',
-  // 'ExportDefaultDeclaration',
-  // 'ExportNamedDeclaration',
-  // 'ClassMethod',
-  // 'ClassDeclaration',
-  // 'ClassProperty',
-  // 'ClassPrivateProperty',
   'ObjectMethod',
   'ExpressionStatement',
   'BreakStatement',
   'ContinueStatement',
-  // 'DebuggerStatement',
   'ReturnStatement',
   'ThrowStatement',
   'TryStatement',
-  // 'VariableDeclaration',
   'VariableDeclarator',
   'IfStatement',
   'ForStatement',
@@ -139,10 +130,12 @@ export function validateSourceLocations(
 
   // Step 2: Collect all locations from the generated AST
   const generatedLocations = new Set<string>();
+  const generatedLocationsFullData = new Map<string, t.Node>();
 
   function collectGeneratedLocations(node: t.Node): void {
     if (node.loc) {
       generatedLocations.add(locationKey(node.loc));
+      generatedLocationsFullData.set(locationKey(node.loc), node);
     }
 
     // Use Babel's VISITOR_KEYS to traverse only actual node properties
@@ -171,6 +164,9 @@ export function validateSourceLocations(
   for (const outlined of generatedAst.outlined) {
     collectGeneratedLocations(outlined.fn.body);
   }
+
+  // console.debug('generatedLocations', generatedLocationsFullData)
+  // console.debug('importantOriginalLocations', importantOriginalLocations)
 
   // Step 3: Validate that all important locations are preserved
   for (const [key, {loc, nodeType}] of importantOriginalLocations) {

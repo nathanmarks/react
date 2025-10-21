@@ -555,6 +555,22 @@ function runWithEnvironment(
     log({kind: 'ast', name: 'Codegen (outlined)', value: outlined.fn});
   }
 
+  // console.debug(ast.body.body.map((n, i) => `${i}: ${n.type}`))
+  // // const thing = ast.body.body[17]
+  // // if (thing.type === 'IfStatement' && thing.consequent.type === 'BlockStatement') {
+  // //   const thing2 = thing.consequent.body[0]
+  // //   if (thing2.type === 'ExpressionStatement') {
+  // //     const thing3 = thing2.expression
+  // //     if (thing3.type === 'AssignmentExpression' && thing3.right.type === 'ArrowFunctionExpression') {
+  // //       console.debug(thing3.right)
+  // //     }
+  // //   }
+  // // }
+  // const thing = ast.body.body[15]
+  // if (thing.type == 'ExpressionStatement') {
+  //   console.log(thing)
+  // }
+
   if (env.config.validateSourceLocations) {
     validateSourceLocations(func, ast).unwrap();
   }
