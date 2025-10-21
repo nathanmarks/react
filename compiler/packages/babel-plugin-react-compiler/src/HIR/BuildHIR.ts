@@ -971,7 +971,18 @@ function lowerStatement(
     case 'ExpressionStatement': {
       const stmt = stmtPath as NodePath<t.ExpressionStatement>;
       const expression = stmt.get('expression');
-      lowerExpressionToTemporary(builder, expression);
+      const value = lowerExpression(builder, expression);
+      // Preserve the original source location of the expression statement
+      // instead of using the value's location
+      const stmtLoc = stmt.node.loc ?? GeneratedSource;
+      const place = buildTemporaryPlace(builder, value.loc);
+      builder.push({
+        id: makeInstructionId(0),
+        lvalue: {...place},
+        value: value,
+        effects: null,
+        loc: stmtLoc,
+      });
       return;
     }
     case 'DoWhileStatement': {
