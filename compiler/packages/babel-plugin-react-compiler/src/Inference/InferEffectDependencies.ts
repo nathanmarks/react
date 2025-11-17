@@ -600,6 +600,7 @@ function inferDependencies(
     context.declare(dep.identifier, {
       id: makeInstructionId(0),
       scope: empty(),
+      loc: dep.identifier.loc,
     });
   }
   const placeholderScope: ReactiveScope = {
@@ -659,6 +660,7 @@ function inferDependenciesInFn(
         context.declare(instr.lvalue.identifier, {
           id: instr.id,
           scope: context.currentScope,
+          loc: instr.loc,
         });
         /**
          * Recursively visit the inner function to extract dependencies

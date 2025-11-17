@@ -52,7 +52,7 @@ function Component({prop1, prop2}) {
 ## Error
 
 ```
-Found 25 errors:
+Found 23 errors:
 
 Todo: Important source location missing in generated code
 
@@ -66,19 +66,6 @@ error.todo-missing-source-locations.ts:4:9
   5 |   const x = prop1 + prop2;
   6 |   const y = x * 2;
   7 |   const arr = [x, y];
-
-Todo: Important source location missing in generated code
-
-Source location for VariableDeclaration is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
-
-error.todo-missing-source-locations.ts:9:2
-   7 |   const arr = [x, y];
-   8 |   const obj = {x, y};
->  9 |   let destA, destB;
-     |   ^^^^^^^^^^^^^^^^^
-  10 |   if (y > 5) {
-  11 |     [destA, destB] = arr;
-  12 |   }
 
 Todo: Important source location missing in generated code
 
@@ -118,19 +105,6 @@ error.todo-missing-source-locations.ts:15:15
   16 |   let sound;
   17 |
   18 |   if (y > 10) {
-
-Todo: Important source location missing in generated code
-
-Source location for VariableDeclaration is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
-
-error.todo-missing-source-locations.ts:16:2
-  14 |   const [a, b] = arr;
-  15 |   const {x: c, y: d} = obj;
-> 16 |   let sound;
-     |   ^^^^^^^^^^
-  17 |
-  18 |   if (y > 10) {
-  19 |     sound = 'woof';
 
 Todo: Important source location missing in generated code
 

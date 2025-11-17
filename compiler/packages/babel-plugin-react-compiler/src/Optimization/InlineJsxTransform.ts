@@ -411,6 +411,7 @@ export function inlineJsxTransform(
           scope.declarations.set(decl.identifier.id, {
             identifier: newDecl,
             scope: decl.scope,
+            loc: decl.loc,
           });
         }
       }

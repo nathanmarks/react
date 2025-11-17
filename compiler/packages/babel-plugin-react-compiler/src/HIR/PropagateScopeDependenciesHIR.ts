@@ -28,6 +28,7 @@ import {
   LoadContext,
   TInstruction,
   FunctionExpression,
+  SourceLocation,
   ObjectMethod,
   PropertyLiteral,
   convertHoistedLValueKind,
@@ -386,6 +387,7 @@ function getProperty(
 type Decl = {
   id: InstructionId;
   scope: Stack<ReactiveScope>;
+  loc: SourceLocation;
 };
 
 export class DependencyCollectionContext {
@@ -588,6 +590,7 @@ export class DependencyCollectionContext {
           scope.declarations.set(maybeDependency.identifier.id, {
             identifier: maybeDependency.identifier,
             scope: originalDeclaration.scope.value!,
+            loc: originalDeclaration.loc,
           });
         }
       });
@@ -672,6 +675,7 @@ export function handleInstruction(
   context.declare(lvalue.identifier, {
     id,
     scope: context.currentScope,
+    loc: instr.loc,
   });
   if (
     context.isDeferredDependency({kind: HIRValue.Instruction, value: instr})
@@ -688,6 +692,7 @@ export function handleInstruction(
     context.declare(value.lvalue.place.identifier, {
       id,
       scope: context.currentScope,
+      loc: instr.loc,
     });
   } else if (value.kind === 'DeclareLocal' || value.kind === 'DeclareContext') {
     /*
@@ -704,6 +709,7 @@ export function handleInstruction(
       context.declare(value.lvalue.place.identifier, {
         id,
         scope: context.currentScope,
+        loc: instr.loc,
       });
     }
   } else if (value.kind === 'Destructure') {
@@ -715,6 +721,7 @@ export function handleInstruction(
       context.declare(place.identifier, {
         id,
         scope: context.currentScope,
+        loc: instr.loc,
       });
     }
   } else if (value.kind === 'StoreContext') {
@@ -731,6 +738,7 @@ export function handleInstruction(
       context.declare(value.lvalue.place.identifier, {
         id,
         scope: context.currentScope,
+        loc: instr.loc,
       });
     }
 
@@ -761,11 +769,13 @@ function collectDependencies(
       context.declare(param.identifier, {
         id: makeInstructionId(0),
         scope: empty(),
+        loc: param.identifier.loc,
       });
     } else {
       context.declare(param.place.identifier, {
         id: makeInstructionId(0),
         scope: empty(),
+        loc: param.place.loc,
       });
     }
   }
@@ -798,6 +808,7 @@ function collectDependencies(
           context.declare(instr.lvalue.identifier, {
             id: instr.id,
             scope: context.currentScope,
+            loc: instr.loc,
           });
           /**
            * Recursively visit the inner function to extract dependencies there
