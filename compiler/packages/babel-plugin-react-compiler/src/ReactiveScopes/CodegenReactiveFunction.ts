@@ -672,7 +672,7 @@ function codegenReactiveScope(
   }
   let firstOutputIndex: number | null = null;
 
-  for (const [, {identifier}] of [...scope.declarations].sort(([, a], [, b]) =>
+  for (const [, {identifier, loc}] of [...scope.declarations].sort(([, a], [, b]) =>
     compareScopeDeclaration(a, b),
   )) {
     const index = cx.nextCacheIndex;
@@ -699,7 +699,9 @@ function codegenReactiveScope(
     outputComments.push(name.name);
     if (!cx.hasDeclared(identifier)) {
       statements.push(
-        t.variableDeclaration('let', [t.variableDeclarator(name)]),
+        createVariableDeclaration(loc, 'let', [
+          t.variableDeclarator(name, null),
+        ]),
       );
     }
     cacheLoads.push({name, index, value: wrapCacheDep(cx, name)});

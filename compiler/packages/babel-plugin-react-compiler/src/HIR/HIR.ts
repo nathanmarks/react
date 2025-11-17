@@ -1640,6 +1640,7 @@ export type ReactiveScopeDependencies = Set<ReactiveScopeDependency>;
 export type ReactiveScopeDeclaration = {
   identifier: Identifier;
   scope: ReactiveScope; // the scope in which the variable was originally declared
+  loc: SourceLocation;
 };
 
 const opaquePropertyLiteral = Symbol();

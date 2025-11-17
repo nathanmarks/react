@@ -156,6 +156,7 @@ class Transform extends ReactiveFunctionTransform<State> {
         scopeBlock.scope.declarations.set(earlyReturnValue.value.id, {
           identifier: earlyReturnValue.value,
           scope: scopeBlock.scope,
+          loc: earlyReturnValue.loc,
         });
 
         const instructions = scopeBlock.instructions;
