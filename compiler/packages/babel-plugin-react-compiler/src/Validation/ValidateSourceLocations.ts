@@ -36,7 +36,6 @@ import {Result} from '../Utils/Result';
 const IMPORTANT_INSTRUMENTED_TYPES = new Set([
   'ArrowFunctionExpression',
   'AssignmentPattern',
-  'BlockStatement',
   'ObjectMethod',
   'ExpressionStatement',
   'BreakStatement',
@@ -140,8 +139,26 @@ export function validateSourceLocations(
     enter(path) {
       const node = path.node;
 
-      // Only track node types that Istanbul instruments
-      if (!IMPORTANT_INSTRUMENTED_TYPES.has(node.type)) {
+      /*
+       * Check if this is a function body BlockStatement.
+       * Istanbul requires path.node.body.loc to register functions in fnMap.
+       */
+      let isFunctionBody = false;
+      if (t.isBlockStatement(node)) {
+        const parent = path.parent;
+        if (
+          t.isFunctionDeclaration(parent) ||
+          t.isFunctionExpression(parent) ||
+          t.isArrowFunctionExpression(parent) ||
+          t.isObjectMethod(parent) ||
+          t.isClassMethod(parent)
+        ) {
+          isFunctionBody = true;
+        }
+      }
+
+      // Only track node types that Istanbul instruments (or function body BlockStatements)
+      if (!IMPORTANT_INSTRUMENTED_TYPES.has(node.type) && !isFunctionBody) {
         return;
       }
 
