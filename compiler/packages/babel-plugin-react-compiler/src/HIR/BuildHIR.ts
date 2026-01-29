@@ -917,7 +917,7 @@ function lowerStatement(
                   kind: InstructionKind.Let,
                   place,
                 },
-                loc: id.node.loc ?? GeneratedSource,
+                loc: stmt.node.loc ?? GeneratedSource,
               });
             } else {
               const typeAnnotation = id.get('typeAnnotation');
@@ -938,7 +938,7 @@ function lowerStatement(
                   place,
                 },
                 type,
-                loc: id.node.loc ?? GeneratedSource,
+                loc: stmt.node.loc ?? GeneratedSource,
               });
             }
           }
