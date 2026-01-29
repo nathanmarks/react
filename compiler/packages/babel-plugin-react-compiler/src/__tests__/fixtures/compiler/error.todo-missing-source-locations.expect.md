@@ -52,7 +52,7 @@ function Component({prop1, prop2}) {
 ## Error
 
 ```
-Found 22 errors:
+Found 30 errors:
 
 Todo: Important source location missing in generated code
 
@@ -69,6 +69,28 @@ error.todo-missing-source-locations.ts:4:9
 
 Todo: Important source location missing in generated code
 
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:4:35
+   2 | import {useEffect, useCallback} from 'react';
+   3 |
+>  4 | function Component({prop1, prop2}) {
+     |                                    ^
+>  5 |   const x = prop1 + prop2;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  6 |   const y = x * 2;
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |   return [y, foo, bar];
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 | }
+     | ^^
+  44 |
+
+Todo: Important source location missing in generated code
+
 Source location for VariableDeclaration is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
 
 error.todo-missing-source-locations.ts:9:2
@@ -79,6 +101,23 @@ error.todo-missing-source-locations.ts:9:2
   10 |   if (y > 5) {
   11 |     [destA, destB] = arr;
   12 |   }
+
+Todo: Important source location missing in generated code
+
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:10:13
+   8 |   const obj = {x, y};
+   9 |   let destA, destB;
+> 10 |   if (y > 5) {
+     |              ^
+> 11 |     [destA, destB] = arr;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 12 |   }
+     | ^^^^
+  13 |
+  14 |   const [a, b] = arr;
+  15 |   const {x: c, y: d} = obj;
 
 Todo: Important source location missing in generated code
 
@@ -134,6 +173,23 @@ error.todo-missing-source-locations.ts:16:2
 
 Todo: Important source location missing in generated code
 
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:18:14
+  16 |   let sound;
+  17 |
+> 18 |   if (y > 10) {
+     |               ^
+> 19 |     sound = 'woof';
+     | ^^^^^^^^^^^^^^^^^^^
+> 20 |   } else {
+     | ^^^^
+  21 |     sound = 'meow';
+  22 |   }
+  23 |
+
+Todo: Important source location missing in generated code
+
 Source location for ExpressionStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
 
 error.todo-missing-source-locations.ts:19:4
@@ -157,6 +213,23 @@ error.todo-missing-source-locations.ts:19:4
   20 |   } else {
   21 |     sound = 'meow';
   22 |   }
+
+Todo: Important source location missing in generated code
+
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:20:9
+  18 |   if (y > 10) {
+  19 |     sound = 'woof';
+> 20 |   } else {
+     |          ^
+> 21 |     sound = 'meow';
+     | ^^^^^^^^^^^^^^^^^^^
+> 22 |   }
+     | ^^^^
+  23 |
+  24 |   useEffect(() => {
+  25 |     if (a > 10) {
 
 Todo: Important source location missing in generated code
 
@@ -208,6 +281,52 @@ error.todo-missing-source-locations.ts:24:2
   31 |
   32 |   const foo = useCallback(() => {
   33 |     return a + b;
+
+Todo: Important source location missing in generated code
+
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:24:18
+  22 |   }
+  23 |
+> 24 |   useEffect(() => {
+     |                   ^
+> 25 |     if (a > 10) {
+     | ^^^^^^^^^^^^^^^^^
+> 26 |       console.log(a);
+     | ^^^^^^^^^^^^^^^^^
+> 27 |       console.log(sound);
+     | ^^^^^^^^^^^^^^^^^
+> 28 |       console.log(destA, destB);
+     | ^^^^^^^^^^^^^^^^^
+> 29 |     }
+     | ^^^^^^^^^^^^^^^^^
+> 30 |   }, [a, sound, destA, destB]);
+     | ^^^^
+  31 |
+  32 |   const foo = useCallback(() => {
+  33 |     return a + b;
+
+Todo: Important source location missing in generated code
+
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:25:16
+  23 |
+  24 |   useEffect(() => {
+> 25 |     if (a > 10) {
+     |                 ^
+> 26 |       console.log(a);
+     | ^^^^^^^^^^^^^^^^^^^^^
+> 27 |       console.log(sound);
+     | ^^^^^^^^^^^^^^^^^^^^^
+> 28 |       console.log(destA, destB);
+     | ^^^^^^^^^^^^^^^^^^^^^
+> 29 |     }
+     | ^^^^^^
+  30 |   }, [a, sound, destA, destB]);
+  31 |
+  32 |   const foo = useCallback(() => {
 
 Todo: Important source location missing in generated code
 
@@ -302,6 +421,23 @@ error.todo-missing-source-locations.ts:32:14
 
 Todo: Important source location missing in generated code
 
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:32:32
+  30 |   }, [a, sound, destA, destB]);
+  31 |
+> 32 |   const foo = useCallback(() => {
+     |                                 ^
+> 33 |     return a + b;
+     | ^^^^^^^^^^^^^^^^^
+> 34 |   }, [a, b]);
+     | ^^^^
+  35 |
+  36 |   function bar() {
+  37 |     return (c + d) * 2;
+
+Todo: Important source location missing in generated code
+
 Source location for Identifier is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
 
 error.todo-missing-source-locations.ts:34:6
@@ -325,6 +461,23 @@ error.todo-missing-source-locations.ts:34:9
   35 |
   36 |   function bar() {
   37 |     return (c + d) * 2;
+
+Todo: Important source location missing in generated code
+
+Source location for BlockStatement is missing in the generated output. This can cause coverage instrumentation to fail to track this code properly, resulting in inaccurate coverage reports..
+
+error.todo-missing-source-locations.ts:36:17
+  34 |   }, [a, b]);
+  35 |
+> 36 |   function bar() {
+     |                  ^
+> 37 |     return (c + d) * 2;
+     | ^^^^^^^^^^^^^^^^^^^^^^^
+> 38 |   }
+     | ^^^^
+  39 |
+  40 |   console.log('Hello, world!');
+  41 |
 
 Todo: Important source location missing in generated code
 

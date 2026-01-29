@@ -36,6 +36,7 @@ import {Result} from '../Utils/Result';
 const IMPORTANT_INSTRUMENTED_TYPES = new Set([
   'ArrowFunctionExpression',
   'AssignmentPattern',
+  'BlockStatement',
   'ObjectMethod',
   'ExpressionStatement',
   'BreakStatement',
