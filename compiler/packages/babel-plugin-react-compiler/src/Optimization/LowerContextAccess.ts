@@ -248,6 +248,7 @@ function emitSelectorFn(env: Environment, keys: Array<string>): Instruction {
 
   const fn: HIRFunction = {
     loc: GeneratedSource,
+    bodyLoc: GeneratedSource,
     id: null,
     nameHint: null,
     fnType: 'Other',

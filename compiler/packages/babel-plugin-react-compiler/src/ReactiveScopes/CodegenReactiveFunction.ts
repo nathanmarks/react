@@ -356,6 +356,9 @@ function codegenReactiveFunction(
 
   const params = fn.params.map(param => convertParameter(param));
   const body: t.BlockStatement = codegenBlock(cx, fn.body);
+  if (fn.bodyLoc !== GeneratedSource) {
+    body.loc = fn.bodyLoc;
+  }
   body.directives = fn.directives.map(d => t.directive(t.directiveLiteral(d)));
   const statements = body.body;
   if (statements.length !== 0) {

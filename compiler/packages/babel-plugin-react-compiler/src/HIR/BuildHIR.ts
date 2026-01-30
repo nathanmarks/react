@@ -186,6 +186,13 @@ export function lower(
 
   let directives: Array<string> = [];
   const body = func.get('body');
+  /*
+   * Capture the body's location separately from the function's location.
+   * For expression bodies (arrow fn with no block), bodyLoc will be GeneratedSource.
+   */
+  const bodyLoc: SourceLocation = body.isBlockStatement()
+    ? (body.node.loc ?? GeneratedSource)
+    : GeneratedSource;
   if (body.isExpression()) {
     const fallthrough = builder.reserve('block');
     const terminal: ReturnTerminal = {
@@ -256,6 +263,7 @@ export function lower(
     generator: func.node.generator === true,
     async: func.node.async === true,
     loc: func.node.loc ?? GeneratedSource,
+    bodyLoc,
     env,
     effects: null,
     aliasingEffects: null,

@@ -58,6 +58,7 @@ export type SourceLocation = t.SourceLocation | typeof GeneratedSource;
  */
 export type ReactiveFunction = {
   loc: SourceLocation;
+  bodyLoc: SourceLocation;
   id: ValidIdentifierName | null;
   nameHint: string | null;
   params: Array<Place | SpreadPattern>;
@@ -281,6 +282,7 @@ export type ReactiveTryTerminal = {
 // A function lowered to HIR form, ie where its body is lowered to an HIR control-flow graph
 export type HIRFunction = {
   loc: SourceLocation;
+  bodyLoc: SourceLocation;
   id: ValidIdentifierName | null;
   nameHint: string | null;
   fnType: ReactFunctionType;

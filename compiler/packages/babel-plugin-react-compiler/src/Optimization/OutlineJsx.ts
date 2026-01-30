@@ -363,6 +363,7 @@ function emitOutlinedFn(
 
   const fn: HIRFunction = {
     loc: GeneratedSource,
+    bodyLoc: GeneratedSource,
     id: null,
     nameHint: null,
     fnType: 'Other',

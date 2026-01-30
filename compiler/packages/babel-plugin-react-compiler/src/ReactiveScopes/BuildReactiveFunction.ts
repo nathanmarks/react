@@ -45,6 +45,7 @@ export function buildReactiveFunction(fn: HIRFunction): ReactiveFunction {
   const body = driver.traverseBlock(cx.block(fn.body.entry));
   return {
     loc: fn.loc,
+    bodyLoc: fn.bodyLoc,
     id: fn.id,
     nameHint: fn.nameHint,
     params: fn.params,
